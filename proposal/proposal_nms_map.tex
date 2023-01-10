@@ -1,0 +1,425 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{amsmath}
+\usepackage{caption}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{\vspace{1in}Capstone Proposal\\
+\vspace{.25in}No Man's Sky\\
+Explored Space Map\\
+\vspace{.5in}}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{CSCI 490\\
+Computer Science\\
+\&\\
+Data Science\\
+Capstone \vspace{.5in}}
+\author{Derek Borders\\
+\vspace{1in}}
+\date{Last compiled on\\
+September 27, 2022}
+
+\begin{document}
+\maketitle
+
+\pagebreak
+
+\hypertarget{no-mans-sky-interactive-3d-galaxy-map}{%
+\section{No Man's Sky Interactive 3d Galaxy
+Map}\label{no-mans-sky-interactive-3d-galaxy-map}}
+
+No Man's Sky is a space exploration game that uses extensive procedural
+generation to create a mind mindbogglingly massive open-world play
+space. The game contains 255 galaxies, each of which contains 4.2
+billion regions. Each region is a roughly 400 light-year cube of space
+and home to around 100 to 600 star systems.\footnote{Each region has
+  address space for 4096 systems but the vast majority of these are
+  inaccessible `phantom' systems that do not appear on the in-game
+  galaxy map and cannot be reached normally.} Finally, each system has
+2-6 planets (counting moons).
+
+The number of planets is so vast that the vast majority of them will
+never be visited by anybody. Even with all users sharing a starting
+galaxy (Euclid), in normal exploration, an individual player is often
+the only person who has ever seen a given planet they land on.
+
+Each world in No Man's Sky are addressed and reachable via an in-game
+portal network using its unique portal address. This address uses a
+unique 16 glyph system that translates nicely to hexadecimal. In each
+address, the final 8 characters translate to hexadecimal coordinates in
+3d space. Two for the y axis, and three each for the X and Z axis. These
+coordinates identify the galactic region containing the system.
+
+No Man's Sky includes a `photo mode' feature which includes an overlay
+in the lower left corner displaying the current galactic coordinates in
+glyphs. Using this feature with the screenshot feature, users can take
+and share images of their travels with coordinates included. An entire
+community of players engage in this activity on
+reddit.com/r/NMSCoordinateExchange.
+
+The goal of the proposed project is to create a tool that can take in
+these screen captures, use machine learning to extract the glyphs,
+translate them to coordinates, and plot the regions in an intuitive,
+interactive 3D visualization (or several) in some kind of dashboard UI.
+Mapping will be from both a local directory of personally captured
+images representing my own explored space, as well as images scraped
+from Reddit to stand in as an approximation of globally explored space.
+
+The project would initially start as a local-only Python analysis tool
+(package), with the possibility of being extended into a small web
+application.
+
+\hypertarget{reason-for-selection}{%
+\subsection{Reason for Selection}\label{reason-for-selection}}
+
+I came up with this idea as a way to get some exposure to basic neural
+networks and computer vision while doing something I am personally
+interested in. I also expect to be able to further develop my data
+visualization skills using some tools I've been aware of but have not
+had the opportunity to explore.
+
+\hypertarget{data-science}{%
+\subsection{Data Science}\label{data-science}}
+
+I think the image classification, machine learning, and data
+visualization elements here are enough to qualify this as a data science
+project. That said, I will be looking for ways to perform additional
+analysis on the information I scrape from the web. This project is much
+more descriptive than predictive analytics. While I understand the DS
+certificate program's focus on predictive analytics, I think descriptive
+analytics, particularly for spatial things like mapping, are very
+interesting and worth exploring further.
+
+\pagebreak
+
+\hypertarget{features}{%
+\subsection{Features}\label{features}}
+
+\hypertarget{core-features}{%
+\subsubsection{Core Features}\label{core-features}}
+
+\begin{itemize}
+\tightlist
+\item
+  mapping personally explored space against space explored the Reddit
+  community as a whole
+\item
+  options to switch between several different visualizations:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    3d scatter plot
+  \item
+    3d surface plot\\
+  \item
+    2d heat map
+  \end{itemize}
+\item
+  various quantitative analyses of community explored space and how
+  users, planets, systsems, and regions all relate to one another
+\end{itemize}
+
+\hypertarget{additional-features-aspirational}{%
+\subsubsection{Additional Features
+(aspirational)}\label{additional-features-aspirational}}
+
+\begin{itemize}
+\tightlist
+\item
+  A more advanced computer vision model that can additional determine
+  the subject of a given image:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    umbrella categorization:
+
+    \begin{itemize}
+    \tightlist
+    \item
+      a planet in general\\
+    \item
+      a star ship, freighter, or frigate\\
+    \item
+      fauna\\
+    \item
+      multitool\\
+    \end{itemize}
+  \item
+    subcategories
+
+    \begin{itemize}
+    \tightlist
+    \item
+      lush planet\\
+    \item
+      `strider' or `diplo' fauna\\
+    \item
+      fan-wing hauler, x-wing fighter\\
+    \item
+      alien multitool\\
+    \end{itemize}
+  \end{itemize}
+\item
+  the ability to hover over a given region and see some summary
+  statistics about it
+
+  \begin{itemize}
+  \tightlist
+  \item
+    number of explored systems\\
+  \item
+    known individuals to have explored the region\\
+  \item
+    closest explored region\\
+  \end{itemize}
+\item
+  the ability to hover over a given region and the image or gallery of
+  images related to it\\
+\item
+  a visualization of regions that appear to be unexplored\\
+\item
+  a way to generate possible coordinates for the system farthest from
+  explored space\\
+\item
+  support for galaxies beyond the first\\
+\item
+  a publicly accessible web application (low priority)
+\end{itemize}
+
+\hypertarget{tools}{%
+\subsection{Tools}\label{tools}}
+
+\begin{itemize}
+\tightlist
+\item
+  Python
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Pandas, Numpy, PyTorch, Plotly Dash\\
+  \item
+    PRAW (Python Reddid API Wrapper)
+  \end{itemize}
+\item
+  TensorFlow, OpenCV
+
+  \begin{itemize}
+  \tightlist
+  \item
+    possibly other, more appropriate ML/CV tools\\
+  \item
+    possibility of adapting an existing OCR engine (like Tesseract)\\
+  \item
+    possibly a transformer based on an imagenet model (to categorize
+    images)\\
+  \end{itemize}
+\item
+  Nvidia RAPIDS suite for GPU acceleration\\
+\item
+  Docker\\
+\item
+  HTML, JS, CSS\\
+\item
+  Default to Django, possibly React or some other framework
+
+  \begin{itemize}
+  \tightlist
+  \item
+    If I get to a web interface, I'd rather not build it from scratch
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{scope-tiers}{%
+\subsection{Scope Tiers}\label{scope-tiers}}
+
+\hypertarget{stage-1.-proof-of-concept---personal-map}{%
+\subsubsection{Stage 1. Proof of Concept - Personal
+Map}\label{stage-1.-proof-of-concept---personal-map}}
+
+\begin{itemize}
+\tightlist
+\item
+  Scan local directory of personal images
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Identical format\\
+  \item
+    Single galaxy, platform, \& version\\
+  \end{itemize}
+\item
+  Process images\\
+\item
+  Extract coordinates\\
+\item
+  Visualize with interactive plot
+
+  \begin{itemize}
+  \tightlist
+  \item
+    base plotly
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{stage-2.-dashboard-ui}{%
+\subsubsection{Stage 2. Dashboard UI}\label{stage-2.-dashboard-ui}}
+
+\begin{itemize}
+\tightlist
+\item
+  Upgrade to modular dahsboard UI
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Plotly Dash\\
+  \end{itemize}
+\item
+  Modular design for efficient addition of later features\\
+\item
+  Plotly Dash (or other framework that easily extends to web
+  applications)
+\end{itemize}
+
+\hypertarget{stage-2.-feature-collective-map}{%
+\subsubsection{Stage 2. Feature: Collective
+Map}\label{stage-2.-feature-collective-map}}
+
+\begin{itemize}
+\tightlist
+\item
+  Scrape reddit for a collection of images\\
+\item
+  Start with only initial galaxy, pc platform, \& update 3.94\\
+\item
+  Include overlaid map and separate personal/collective map
+\end{itemize}
+
+\hypertarget{stage-3.-scale-increase}{%
+\subsubsection{Stage 3. Scale Increase}\label{stage-3.-scale-increase}}
+
+\begin{itemize}
+\tightlist
+\item
+  Add images from older updates, other platforms, additional galaxies,
+  etc
+\end{itemize}
+
+\hypertarget{stage-4.-upgrade-with-miscellanous-optional-features}{%
+\subsubsection{Stage 4. Upgrade with Miscellanous Optional
+Features}\label{stage-4.-upgrade-with-miscellanous-optional-features}}
+
+\begin{itemize}
+\tightlist
+\item
+  Identify most isolated regions and generate random coordinates to
+  attempt jumping to unexplored space.
+\item
+  Find an efficient way to make it so you can hover over points and see
+  the image(s) related to that point.\\
+\item
+  Scrape with flair searches to add filterable attributes like galaxy,
+  subject, platform\\
+\item
+  Use subject specific scraped images to train a transformer to
+  differentiate between base, ship, multi-tool, freighter, and
+  flora/fauna\\
+\item
+  Process uploaded images to `paint out' undesirable obstructions
+  (UI/HUD elements) with ML-based technique\\
+\item
+  Galactic population density heat map
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Individual regions have hundreds of systems\\
+  \item
+    With sufficient sample size, collisions are likely\\
+  \item
+    Some regions or clusters of regions may have images from dozens or
+    hundreds of systems/planets
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{stage-5.-publish-to-web-application}{%
+\subsubsection{Stage 5. Publish to Web
+Application}\label{stage-5.-publish-to-web-application}}
+
+\begin{itemize}
+\tightlist
+\item
+  Containerization w/ Docker\\
+\item
+  Basic web interface
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,371 @@
+---
+title: |
+  | \vspace{1in}Assignment 9
+  | \vspace{1in}  
+author: |
+  | Derek Borders
+  | \vspace{1in}
+date: |
+  | Last compiled on  
+  | `r format(Sys.time(), '%B %d, %Y')`
+output: 
+  pdf_document:
+    keep_tex: true
+    extra_dependencies: caption
+subtitle: | 
+  | MATH 411 
+  | Advanced Algorithms and Complexity \vspace{1in}
+header-includes:
+  \usepackage{amsmath}
+---  
+\pagebreak 
+
+
+# Written Problems  
+
+
+## 1 | Regex Reverse  
+
+(5 pts) 
+
+> Generate a regular expression (using the syntax discussed in class) describing the reverse of $0^*(0+101)^*+(110)^*$. 
+
+Reverse:  
+- all concatenations in reverse order  
+- `or` $(+)$ unaffected  
+- `kleene star`$(x^*)$ unaffected  
+
+
+$0^*(0+101)^* +(110)^* \to^R (0+101)^*0^*+(011)^*$
+
+
+
+
+## 2 | Regex Complement
+(5 pts)  
+
+> Generate a regular expression (using the syntax discussed in class) describing the complement of $0^*+(11+01+10+00)^*$.
+
+*Done in class*
+
+$L$ is essentially ((all 0s) OR (even-length))
+
+By DeMorgan's Law, negating (x OR y) is the same as (NOT x AND NOT y). 
+
+Hence, we need a regular expression describing all strings that are ((NOT all 0s) AND (odd length). 
+
+That makes our target string anything of odd length that contains at least one 1.
+
+$(11+01+10+00)^*1^*(11+01+10+00)^*$
+
+
+
+## 3 | CFG |1|>|0|  
+
+(5 pts) 
+
+> Design a CFG for the language of all binary strings with more 1s than 0s.
+
+Starting with nothing we have zero of each, so we have to start with a 1 and then add to it. At each step, we can add either a 1,0 pair or a 1. In order to be able to grow long strings of consecutive 0s or 1s in the string, we need to add space for new insertions around the inserted 1,0/0,1 pairs. This leads to a simple CFG, with a less than elegant expansion with lots of As going to epsilon as string size grows. 
+
+$S \to A1A$ 
+$A \to A1A0A ~~|~~ A0A1A ~~|~~ \epsilon$ 
+
+I think the A on one side or the other of A's expressions could be dropped, but I haven't tried enough strings or worked through the logic completely enough to be certain.
+
+## 4 | Cover Your Kiester
+
+> Use the CYK algorithm to determine whether or not the CFG below recognizes the following strings. Show the filled table associated with each.
+
+S $\to$ AB ~~|~~ BC ~~|~~ a  
+A $\to$ CA ~~|~~ c  
+B $\to$ AA ~~|~~ BB ~~|~~ a ~~|~~ c  
+C $\to$ AB ~~|~~ b  
+
+
+
+### A | (10 pts) $bccbcac$  
+
+![](4a.png)
+
+
+### B | (10 pts) $ccaabb$
+
+*Nothing produces S, and only S matters in the final cell/row. Ignoring S above final row and looking only for S in the final row to simplify things a bit and speed this one up.*
+
+![](4b.png)
+
+Intuitively, this one fails because there is no way to end or start with $bb$. (It should be possible to get $bb$ internally). This is reflected in the way the empty set propagates down from the top right.
+
+
+## 5 | Calm Your Knockers
+
+> Use the CYK algorithm to determine whether or not the CFG below recognizes the following strings. Show the filled table associated with each.
+
+S $\to$ AA ~~|~~ BB ~~|~~ BA ~~|~~ $\epsilon$  
+A $\to$ AB ~~|~~ 1  
+B $\to$ BA ~~|~~ 0  
+
+
+
+### A | (10 pts) $0001110$
+
+Fails because it starts with 000. That many Bs needs a leading 1 to grow arbitrary 0s as happens in 5B. 
+
+![](5a.png)
+
+
+### B | (10 pts) $1011000$
+
+![](5b.png)
+
+## 6 | Turing Machine Configurations
+
+> Given the transition diagram below, show the sequence of configurations for the following strings. In each case, is the final configuration accepting or rejecting assuming that the Turing machine accepts by accepting state?
+
+![](p6.png)
+
+
+### A | (5 pts) $ababa$
+
+
+
+$q_0ababa~\vdash~Xq_1baba$  
+$Xq_1baba~\vdash~Xbq_2aba$  
+$Xbq_2aba~\vdash~Xbaq_2ba$  
+$Xbaq_2ba~\vdash~Xbabq_2a$  
+$Xbabq_2a~\vdash~Xbabaq_2B$  
+$Xbabaq_2B~\vdash~Xbabq_3a$  
+$Xbabq_3a~\vdash~Xbaq_7bX$  
+$Xbaq_7bX~\vdash~Xbq_7abX$  
+$Xbq_7abX~\vdash~Xq_7babX$  
+$Xq_7babX~\vdash~q_7XbabX$  
+$q_7XbabX~\vdash~Xq_0babX$  
+$Xq_0babX~\vdash~XXq_4abX$  
+$XXq_4abX~\vdash~XXaq_5bX$  
+$XXaq_5bX~\vdash~XXabq_5X$  
+$XXabq_5X~\vdash~XXaq_6bX$  
+$XXaq_6bX~\vdash~XXq_7aXX$  
+$XXq_7aXX~\vdash~Xq_7XaXX$  
+$Xq_7XaXX~\vdash~XXq_0aXX$  
+$XXq_0aXX~\vdash~XXXq_1XX$  
+$XXXq_1XX~\vdash~XXXXq_8X$  
+
+<br>  
+
+TM halts at $q_8$ in an accepting state.
+
+
+### B | (5 pts) $babb$
+
+
+$q0	b	a	b	b			~\vdash~					X	q4	a	b	b$	 
+$X	q4	a	b	b			~\vdash~				X	a	q5	b	b$	 
+$X	a	q5	b	b			~\vdash~				X	a	b	q5	b$	 
+$X	a	b	q5	b			~\vdash~				X	a	b	b	q5	B$  
+$X	a	b	b	q5	B		~\vdash~				X	a	b	q6	b$	 
+$X	a	b	q6	b			~\vdash~				X	a	q7	b	b$	 
+$X	a	q7	b	b			~\vdash~				X	q7	a	b	b$	 
+$X	q7	a	b	b			~\vdash~				q7	X	a	b	b$	 
+$q7	X	a	b	b			~\vdash~					X	q0	a	b	b$	 
+$X	q0	a	b	b			~\vdash~				X	X	q1	b	b$	 
+$X	X	q1	b	b			~\vdash~				X	X	b	q2	b$	 
+$X	X	b	q2	b			~\vdash~				X	X	b	b	q2	B$  
+$X	X	b	b	q2	B		~\vdash~				X	X	b	q3	b$	 
+
+
+<br>  
+
+TM halts at $q_3$ in a non-accepting state.
+
+
+## 7 | Hard and Fast  
+
+(5 pts)  
+
+> Explain why computers are able to solve Sudoku puzzles so quickly if Sudoku is NP-complete.  
+
+
+NP-Complete is about asymptotic run time, not absolute run time. Computers are able to solve small versions of many NP-complete problems. 9x9 Sudoku might as well be instant. Same for Traveling Salesman on a weighted k9 graph.  
+
+Scaling up the inputs is where things slow down. Traveling salesman gets noticeable around 11-13 nodes depending on your machine. For scaled systems, this is already a huge issue. From there, one or two nodes more become problematic even if you’re only doing it once on your own machine out of curiosity. Another couple nodes and it might as well take forever. 
+
+Similarly, as the size of a Sudoku board grows, its solving time grows exponentially. 
+
+I've seen numbers on what sizes of board become unfeasible, but I don't recall where and couldn't find them with a cursory search. Presumably they alyways have to be n by n with n being a perfect square. I imagine at least up to 25 or 36 are doable. I want to say the thing I saw was about 100x100 being an eternity to solve or something.  
+
+## 8 | Vertex Cover to Independent set
+
+(15 pts)  
+
+> Recall the definitions of the vertex cover and independent set problems.
+
+**Definition:**  Vertex Cover 
+Given an undirected graph $G=(V,E)$, a **vertex cover** of $G$ is a subset of vertices $C \subseteq V$ such that, for every edge $\{u,v\} \in E$, either $u \in C$ or $v \in C$.
+
+**The Vertex Cover Problem**  
+**Input:**   An undirected graph $G=(V,E)$ and an integer $k$.
+**Output:**   True if and only if $G$ has a vertex cover of size $k$ or less.
+
+
+**Definition:**  Independent Set 
+Given an undirected graph $G=(V,E)$, an **independent set** is a subset of vertices $I \subseteq V$ such that no two elements of $I$ are adjacent. In particular, if $u,v \in I$, then $\{u,v\} \not \in E$.
+
+**The Independent Set Problem**  
+**Input:** An undirected graph $G=(V,E)$ and an integer $k$.  
+**Output:** True if and only if $G$ contains an independent set of size $k$ or more. 
+
+
+> Show that the vertex cover problem is NP-complete via reduction from the independent set problem (independent set $\leq_p$ vertex cover).
+
+
+*Shamelessly repeated from lecture because I understand these as we work through them but producing them strains my rusty proof skills.*  
+
+#### 1. Show A is in NP  
+
+Clearly, the independent set problem is NP-complete...
+
+(It seems like using the naive brute force version of an algorithm shouldn't be sufficient to demonstrate something is or isn't NP-Complete.)  
+
+
+#### 2. Describe a way to convert any instance of B into an instance of A  
+
+$C$ is a vertex cover if and only if $V ~\backslash~ C$ is an independent set.  
+
+
+
+#### 3. Show this conversion takes polynomial time. 
+
+Loop through the vertices $\forall v \in G$, if $v\notin C$, $v\in I$.  
+Linear time. 
+
+
+
+#### 4. Show that a solution to an instance of A corresponds to a solution for the instance of B
+
+
+- $\Rightarrow$ Suppose $C$ is a vertex cover  
+  - Let $u, v \in V ~\backslash~ C$  
+  - if $\{u,v\}\in E$, then this edge is not covered  
+  - so $\{u,v\}\notin E$  
+  - Then $V ~\backslash~ C$ must be an independent set  
+
+- $\Leftarrow$ Suppose $I=V~\backslash~C$ is an independent set  
+  - let $\{u,v\}\in E$  
+  - Then it can't be that $u,v\in I$  
+  - So either $u\in C$ or $v\in C$ (or both) and the edge is covered.  
+  
+
+
+
+
+
+
+## 9 | Set Cover to Independent Set
+
+(15 pts) 
+
+> The set cover problem is defined as follows.
+
+**Definition:**  Set Cover  
+Given a set of elements $U$ (often called the universe) and subsets $S_1, S_2, \dots, S_m \subseteq U$, $C \subseteq \{1, 2, \dots, m\}$ is a **set cover** of $U$ if $\bigcup_{i \in C} S_i = U$.
+
+**The Set Cover Problem**  
+**Input:** A universe $U$, sets $S_1, S_2, \dots, S_m \subseteq U$, and an integer $k$.  
+**Output:** True if and only if there is a cover $C$ of $U$ such that $|C| \leq k$. 
+
+**Definition:**  Vertex Cover  
+Given an undirected graph $G=(V,E)$, a **vertex cover** of $G$ is a subset of vertices $C \subseteq V$ such that, for every edge $\{u,v\} \in E$, either $u \in C$ or $v \in C$.
+
+**The Vertex Cover Problem**  
+**Input:**   An undirected graph $G=(V,E)$ and an integer $k$.
+**Output:**   True if and only if $G$ has a vertex cover of size $k$ or less.
+
+> Show that the set cover problem is NP-complete via reduction from the vertex cover problem (vertex cover $\leq_p$ set cover).  
+
+I hope this is close to right. Feels like I messed up since it isn't reversible. 
+
+
+
+#### 1. Show vertex cover is in NP  
+
+Proved by reduction from Independent Set problem above.
+
+
+
+#### 2. Describe a way to convert any instance of vertex cover into an instance of set cover.  
+
+Vertex cover covers edges with vertices.   
+Set cover covers elements with subsets.    
+Each vertex covers a subset of edges.  
+
+Let $U$ be $E$. That is, the elements of the universe are all $e \in E$.
+
+Let each $v_i\in V$ be a subset ($S_i$) of $U$ such that every edge with $v_i$ as an endpoint is an element of $S_i$. 
+
+By definition all $e=\{u,v\} \in E$, either $u\in C$ or $v \in C$, or both.
+
+Thus, the union of all such sets must contain all edges in the graph. 
+
+
+I don't think this works backward reliably. Or, at least not in the same way. The conversion from vertex cover to set cover results in each edge element appearing in two sets. If we start with sets and an element appears in some other number of sets, I don't see how to make that work. 
+
+
+
+#### 3. Show this conversion takes polynomial time.  
+
+
+Loop through the edges once to convert. Linear conversion time: $O(|V|)$
+
+
+
+#### 4. Show that a solution to an instance of A corresponds to a solution for the instance of B
+
+I think that's sort of covered in 2. 
+
+If G has a vertex cover of size $k$ or less, then U has a set cover of size $k$ or less.
+
+
+
+
+## Extra Credit 
+
+(Extra credit, 5 pts)  
+
+> Find an NP-complete problem that you find interesting Wikipedia has a [partial list](https://en.wikipedia.org/wiki/List_of_NP-complete_problems) and there is another list [here](https://cgi.csc.liv.ac.uk/~ped/teachadmin/COMP202/annotated_np.html).
+
+> Describe the problem precisely. What are the inputs? What is the output? At a high level, what makes this problem NP-complete?
+
+### Problem  
+
+*Everything here is paraphrased or directly copied from the Tentai Show page on Wikipedia and the Erich Friedman paper it references *  
+
+[Tentai Show](https://en.wikipedia.org/wiki/Tentai_Show), also known as "Spiral Galaxies" is a Japanese binary-determination logic puzzle. 
+
+
+```{r, echo=FALSE,out.width="80%", fig.cap="A Spiral Galaxies puzzle (left) and its solution (right)\\linebreak Image: Friedman",fig.show='hold',fig.align='center'}
+knitr::include_graphics("puzzle.png")
+``` 
+
+Tentai Show is played on a rectangular grid of squares with dots placed on the grid on the center of a cell (1 cell), an edge (2 cells), or a corner(4 cells).
+
+Solving the puzzle involves subdividing the initial grid along edges such that the grid is divided into regions containing one dot each. Each region must have $180^{\circ}$ rotational symmetry around the dot it contains.
+
+We are only interested in this portion of the puzzle. The colored dots can be used to make a color-by-number type thing, but that's not part of the np-complete problem. 
+
+### Input  
+
+Some representation of a rectangular grid consisting of cells, edges between cells, and dots located in a cell, between two cells, or on a corner between four cells. The grid could be a matrix and the dots a set of sets of cell coordinates, with each set indicating the 1, 2 or 4 cells associated with a given dot.
+
+### Output  
+
+Indication that the puzzle has no solution, or some representation of a solution. A set of sets would work, each set being the cells within a region.
+
+
+### NP-Completeness  
+
+In [2002, Erich Friedman](https://erich-friedman.github.io/papers/spiral.pdf) demonstrated that "the question of whether or not a given [Spiral Galaxies] puzzle has a solution is NP-complete."
+
+This was shown by constructing puzzles which corresponded to arbitrary Boolean circuits. The circuits are satisfied if and only if the corresponding puzzle has a solution. This conversion to the canonically np-complete Boolean satisfiability problem was then shown to be achievable in polynomial time. 
+
+I read through the paper and am not ashamed to admit that even with plenty of nice images, it's mostly over my head.
